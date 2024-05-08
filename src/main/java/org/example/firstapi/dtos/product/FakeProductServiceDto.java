@@ -1,4 +1,4 @@
-package org.example.firstapi.dtos;
+package org.example.firstapi.dtos.product;
 
 import lombok.Data;
 

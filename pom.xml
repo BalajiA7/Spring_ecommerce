@@ -61,9 +61,9 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/net.sourceforge.javydreamercsw/MySQL-Driver -->
         <dependency>
-            <groupId>net.sourceforge.javydreamercsw</groupId>
-            <artifactId>MySQL-Driver</artifactId>
-            <version>0.1</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version> <!-- Or the version you prefer -->
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
         <dependency>

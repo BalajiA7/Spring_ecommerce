@@ -1,6 +1,6 @@
 package org.example.firstapi.services;
 
-import org.example.firstapi.dtos.FakeProductServiceDto;
+import org.example.firstapi.dtos.product.FakeProductServiceDto;
 import org.example.firstapi.models.Category;
 import org.example.firstapi.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("fakeProduct")
 public class FakeStoreProductServiceImpl implements ProductService {
 
     private final RestTemplate restTemplate;
@@ -52,5 +52,25 @@ public class FakeStoreProductServiceImpl implements ProductService {
             productList.add(product);
         }
         return productList;
+    }
+
+    @Override
+    public Product createProduct(String title, String description, String image, double price, String category) {
+        return null;
+    }
+
+    @Override
+    public Product updatePrice(long productId, double price) {
+        return null;
+    }
+
+    @Override
+    public Product updateImage(long productId, String image) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteProduct(long id) {
+        return false;
     }
 }
