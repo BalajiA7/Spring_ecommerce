@@ -65,12 +65,5 @@ public class FakeStoreProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateImage(long productId, String image) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteProduct(long id) {
-        return false;
-    }
+    public void deleteProduct(long id) {}
 }

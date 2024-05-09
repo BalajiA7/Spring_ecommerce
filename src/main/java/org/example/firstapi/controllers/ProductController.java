@@ -1,17 +1,12 @@
 package org.example.firstapi.controllers;
 
 import org.example.firstapi.dtos.ResponseStatus;
-import org.example.firstapi.dtos.product.CreateProductRequestDTO;
-import org.example.firstapi.dtos.product.CreateProductResponseDTO;
-import org.example.firstapi.dtos.product.ProductResponseDTO;
-import org.example.firstapi.dtos.product.ProductsResponseDTO;
-import org.example.firstapi.models.Product;
+import org.example.firstapi.dtos.product.*;
 import org.example.firstapi.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController()
 @RequestMapping("/products")
@@ -64,5 +59,36 @@ public class ProductController {
             productResponseDTO.setResponseStatus(ResponseStatus.FAILURE);
         }
         return productResponseDTO;
+    }
+
+    /* PATCH REQUEST */
+    @PatchMapping("{id}/updatePrice")
+    public UpdateProductPriceResponseDTO updateProductPrice(@PathVariable("id") long productId, @RequestBody UpdateProductPriceRequestDTO  updateProductPriceRequestDTO){
+        double price = updateProductPriceRequestDTO.getPrice();
+        UpdateProductPriceResponseDTO updateProductPriceResponseDTO = new UpdateProductPriceResponseDTO();
+        try{
+            updateProductPriceResponseDTO.setProduct(productService.updatePrice(productId, price));
+            updateProductPriceResponseDTO.setMessage("price updated successfully for " + productId);
+            updateProductPriceResponseDTO.setResponseStatus(ResponseStatus.SUCCESS);
+        }catch (Exception e) {
+            updateProductPriceResponseDTO.setMessage(e.getMessage());
+            updateProductPriceResponseDTO.setResponseStatus(ResponseStatus.FAILURE);
+        }
+        return updateProductPriceResponseDTO;
+    }
+
+    /* DELETE REQUEST */
+    @DeleteMapping("/{id}")
+    public DeleteProductResponseDTO deleteProduct(@PathVariable("id") long productId){
+        DeleteProductResponseDTO responseDTO = new DeleteProductResponseDTO();
+        try{
+            productService.deleteProduct(productId);
+            responseDTO.setMessage("Product with id " + productId + " deleted successfully");
+            responseDTO.setResponseStatus(ResponseStatus.SUCCESS);
+        }catch (Exception e) {
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setResponseStatus(ResponseStatus.FAILURE);
+        }
+        return responseDTO;
     }
 }

@@ -48,17 +48,15 @@ public class SelfProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updatePrice(long productId, double price) {
-        return null;
+    public Product updatePrice(long productId, double price) throws ProductNotFoundException {
+        Product product = this.getProductById(productId);
+        product.setPrice(price);
+        return productRepository.save(product);
     }
 
     @Override
-    public Product updateImage(long productId, String image) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteProduct(long id) {
-        return false;
+    public void deleteProduct(long id) throws ProductNotFoundException {
+        Product product = this.getProductById(id);
+        this.productRepository.delete(product);
     }
 }
