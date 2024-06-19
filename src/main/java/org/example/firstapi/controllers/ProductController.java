@@ -1,10 +1,14 @@
 package org.example.firstapi.controllers;
 
+import org.example.firstapi.components.AuthUtils;
 import org.example.firstapi.dtos.ResponseStatus;
 import org.example.firstapi.dtos.product.*;
+import org.example.firstapi.models.Product;
 import org.example.firstapi.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -13,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     private final ProductService productService;
+    private final AuthUtils authUtils;
 
     @Autowired
-    public ProductController(@Qualifier("selfProduct") ProductService productService) {
+    public ProductController(@Qualifier("selfProduct") ProductService productService, AuthUtils authUtils) {
         this.productService = productService;
+        this.authUtils = authUtils;
     }
 
     /* GET REQUEST */
@@ -43,22 +49,27 @@ public class ProductController {
 
     /* POST REQUEST */
     @PostMapping("")
-    public CreateProductResponseDTO createProduct(@RequestBody CreateProductRequestDTO createProductRequestDTO){
+    public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequestDTO createProductRequestDTO, @RequestHeader("Auth") String token){
+        // Validate token
+        if(!authUtils.validateToken(token)){
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
         // Basic Validation
         String title = createProductRequestDTO.getTitle();
         String description = createProductRequestDTO.getDescription();
         double price = createProductRequestDTO.getPrice();
         String image = createProductRequestDTO.getImage();
         String categoryName = createProductRequestDTO.getCategoryName();
-        CreateProductResponseDTO productResponseDTO = new CreateProductResponseDTO();
+        //CreateProductResponseDTO productResponseDTO = new CreateProductResponseDTO();
         try{
-           productResponseDTO.setProduct(productService.createProduct(title, description,image,price, categoryName));
-           productResponseDTO.setResponseStatus(ResponseStatus.SUCCESS);
+             Product product = productService.createProduct(title, description,image,price, categoryName);
+             return new ResponseEntity<>(product, HttpStatus.CREATED);
+            // productResponseDTO.setResponseStatus(ResponseStatus.SUCCESS);
         }catch (Exception e) {
-            productResponseDTO.setMessage(e.getMessage());
-            productResponseDTO.setResponseStatus(ResponseStatus.FAILURE);
+            // productResponseDTO.setMessage(e.getMessage());
+            //  productResponseDTO.setResponseStatus(ResponseStatus.FAILURE);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return productResponseDTO;
     }
 
     /* PATCH REQUEST */
